@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  dw-postgres:
+    image: postgres:16-alpine
+    container_name: dw-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: taina123
+      POSTGRES_DB: dw_frota
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_dw:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: dw-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: taina123
+    ports:
+      - "8081:80"
+    depends_on:
+      - dw-postgres
+
+volumes:
+  pgdata_dw:
